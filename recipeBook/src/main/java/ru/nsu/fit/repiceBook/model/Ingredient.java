@@ -6,9 +6,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Builder;
+import lombok.Data;
 
 @Entity
 @Builder
+@Data
 public class Ingredient {
 
     @Id
@@ -17,8 +19,4 @@ public class Ingredient {
 
     private String name;
     private Float weight;
-
-    @ManyToOne
-    @JoinColumn(name="recipe_id")
-    private Recipe recipe;
 }

@@ -34,7 +34,7 @@ public class User implements UserDetails {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   private Token token;
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   private List<Recipe> recipes;
 
   @Override

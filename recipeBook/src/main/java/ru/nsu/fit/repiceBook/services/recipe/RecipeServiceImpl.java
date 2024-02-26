@@ -1,8 +1,10 @@
 package ru.nsu.fit.repiceBook.services.recipe;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
@@ -20,33 +22,43 @@ import java.util.*;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
 
-    private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final SourceIngredientRepository sourceIngredientRepository;
 
     @Value("${images.dir}")
     private String imagesDir;
 
+    @Override
     public RecipeCreatingResponse createRecipe(RecipeCreatingRequest request) throws IOException {
-        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        checkIngredients(request.getIngredients());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail;
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            userEmail = authentication.getName();
+        } else {
+            throw new RuntimeException("Пользователь не авторизован");
+        }
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
+            () -> new NoSuchElementException("Пользователя " + userEmail + " не существует"));
+        log.info("Добавление рецепта пользователю {}", user.getEmail());
+        verifyIngredients(request.getIngredients());
         log.info("Ингредиенты прошли проверку");
-        Recipe recipe = Recipe.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .imagePath(saveImage(request.getImage()))
-                .ingredients(request.getIngredients())
-                .build();
-
+        user.getRecipes().add(Recipe.builder()
+            .name(request.getName())
+            .description(request.getDescription())
+            .imagePath(saveImage(request.getImage()).toString())
+            .ingredients(request.getIngredients())
+            .build());
+        userRepository.save(user);
+        log.info("Рецепт name=\"{}\" пользователя {} добавлен", request.getName(), user.getEmail());
         return RecipeCreatingResponse.builder()
                 .isCreated(true)
                 .build();
     }
 
-    private void checkIngredients(List<Ingredient> ingredients) {
+    private void verifyIngredients(List<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
             if (!sourceIngredientRepository.existsByName(ingredient.getName())) {
                 log.warn("Ингредиента {} не существует", ingredient.getName());

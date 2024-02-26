@@ -1,20 +1,21 @@
 package ru.nsu.fit.repiceBook.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-
-import java.nio.file.Path;
 import java.util.List;
-
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Recipe {
 
     @Id
@@ -23,9 +24,9 @@ public class Recipe {
 
     private String name;
     private String description;
-    private Path imagePath;
+    private String imagePath;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Ingredient> ingredients;
 
 }

@@ -2,13 +2,14 @@ package ru.nsu.fit.repiceBook.dto.recipe;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.model.Ingredient;
 
 import java.util.List;
 
 @Data
+@Builder
 public class RecipeCreatingRequest {
 
     @NotNull(message="Название рецепта не может быть пустым")

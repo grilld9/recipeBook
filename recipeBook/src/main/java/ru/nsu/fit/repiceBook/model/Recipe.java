@@ -1,10 +1,7 @@
 package ru.nsu.fit.repiceBook.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +23,13 @@ public class Recipe {
     private String description;
     private String imagePath;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<Ingredient> ingredients;
 
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
+    @OneToMany(orphanRemoval = true, mappedBy = "recipe", cascade = CascadeType.ALL)
+    private List<Step> steps;
 }

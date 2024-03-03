@@ -1,24 +1,23 @@
 package ru.nsu.fit.repiceBook.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Builder
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Ingredient {
+@Builder
+public class Step {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String name;
-    private Float weight;
+    private Integer number;
+    private String imagePath;
+    private String description;
+    private Integer timerInSeconds;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id")

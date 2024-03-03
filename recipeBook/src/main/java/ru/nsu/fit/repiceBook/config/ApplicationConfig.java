@@ -5,9 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ResourceLoader;
 import ru.nsu.fit.repiceBook.model.SourceIngredient;
-import ru.nsu.fit.repiceBook.repositories.SourceIngredientRepository;
+import ru.nsu.fit.repiceBook.repositories.recipe.SourceIngredientRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

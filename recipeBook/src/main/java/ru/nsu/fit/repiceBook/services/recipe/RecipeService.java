@@ -1,8 +1,10 @@
 package ru.nsu.fit.repiceBook.services.recipe;
 
-import java.io.IOException;
+import java.util.List;
+
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingResponse;
+import ru.nsu.fit.repiceBook.model.Recipe;
 
 public interface RecipeService {
 
@@ -11,7 +13,26 @@ public interface RecipeService {
      * шаги для каждого рецепта создаются отдельно
      * @param request Запрос на создание рецепта
      * @return Ответ на создание рецепта
-     * @throws IOException если возникла проблема при сохранении фотографии
      */
-    RecipeCreatingResponse createRecipe(RecipeCreatingRequest request) throws IOException;
+    RecipeCreatingResponse createRecipe(RecipeCreatingRequest request);
+
+    /**
+     * Получает рецепт по его ID
+     * @param recipeId ID рецепта
+     * @return рецепт
+     */
+    Recipe getRecipe(Long recipeId);
+
+    /**
+     * Получает список рецептов текущего пользователя
+     * @return список рецептов
+     */
+    List<Recipe> getRecipesByUser();
+
+    /**
+     * Получает список рецептов определенного пользователя
+     * @param userId ID пользователя
+     * @return список рецептов
+     */
+    List<Recipe> getRecipesByUser(Long userId);
 }

@@ -4,27 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingResponse;
 import ru.nsu.fit.repiceBook.model.Ingredient;
-import ru.nsu.fit.repiceBook.repositories.RecipeRepository;
-import ru.nsu.fit.repiceBook.services.recipe.RecipeServiceImpl;
-
-import java.io.IOException;
+import ru.nsu.fit.repiceBook.model.Recipe;
+import ru.nsu.fit.repiceBook.services.recipe.RecipeService;
+import ru.nsu.fit.repiceBook.services.recipe.StepService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/recipe")
 public class RecipeController {
 
-    private final RecipeRepository recipeRepository;
-
-    private final RecipeServiceImpl recipeService;
+    private final RecipeService recipeService;
+    private final StepService stepService;
 
     @GetMapping("/example")
     public RecipeCreatingRequest getCreatingRequestExample() {
@@ -41,7 +35,12 @@ public class RecipeController {
     }
 
     @PostMapping
-    public ResponseEntity<RecipeCreatingResponse> addRecipe(@RequestBody RecipeCreatingRequest request) throws IOException {
+    public ResponseEntity<RecipeCreatingResponse> postRecipe(@RequestBody RecipeCreatingRequest request) {
         return ResponseEntity.ok(recipeService.createRecipe(request));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Recipe>> getRecipes() {
+        return ResponseEntity.ok(recipeService.getRecipesByUser());
     }
 }

@@ -6,12 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingResponse;
-import ru.nsu.fit.repiceBook.model.Ingredient;
 import ru.nsu.fit.repiceBook.model.Recipe;
 import ru.nsu.fit.repiceBook.model.User;
 import ru.nsu.fit.repiceBook.repositories.recipe.RecipeRepository;
-import ru.nsu.fit.repiceBook.repositories.recipe.SourceIngredientRepository;
-import ru.nsu.fit.repiceBook.repositories.UserRepository;
 import ru.nsu.fit.repiceBook.services.UserService;
 
 import java.util.*;
@@ -21,8 +18,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
 
-    private final UserRepository userRepository;
-    private final SourceIngredientRepository sourceIngredientRepository;
+    private final IngredientsService ingredientsService;
     private final ImageService imageService;
     private final UserService userService;
     private final RecipeRepository recipeRepository;
@@ -34,28 +30,18 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeCreatingResponse createRecipe(RecipeCreatingRequest request) {
         User user = userService.getCurrUser();
         log.info("Добавление рецепта пользователю {}", user.getEmail());
-        verifyIngredients(request.getIngredients());
-        log.info("Ингредиенты прошли проверку");
-        user.getRecipes().add(Recipe.builder()
+        Recipe recipe = Recipe.builder()
             .name(request.getName())
+            .user(user)
             .description(request.getDescription())
             .imagePath(imageService.saveImage(request.getImage()).toString())
-            .ingredients(request.getIngredients())
-            .build());
-        userRepository.save(user);
+            .build();
+        ingredientsService.saveIngredients(request.getIngredients(), recipe);
+        recipeRepository.save(recipe);
         log.info("Рецепт name=\"{}\" пользователя {} добавлен", request.getName(), user.getEmail());
         return RecipeCreatingResponse.builder()
                 .isCreated(true)
                 .build();
-    }
-
-    private void verifyIngredients(List<Ingredient> ingredients) {
-        for (Ingredient ingredient : ingredients) {
-            if (!sourceIngredientRepository.existsByName(ingredient.getName())) {
-                log.warn("Ингредиента {} не существует", ingredient.getName());
-                throw new NoSuchElementException();
-            }
-        }
     }
     public Recipe getRecipe(Long recipeId) {
         return recipeRepository.findById(recipeId).orElseThrow(

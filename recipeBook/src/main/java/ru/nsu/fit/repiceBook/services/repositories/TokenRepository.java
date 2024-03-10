@@ -1,4 +1,4 @@
-package ru.nsu.fit.repiceBook.repositories;
+package ru.nsu.fit.repiceBook.services.repositories;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

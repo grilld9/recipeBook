@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.nsu.fit.repiceBook.model.SourceIngredient;
-import ru.nsu.fit.repiceBook.repositories.recipe.SourceIngredientRepository;
+import ru.nsu.fit.repiceBook.services.repositories.recipe.SourceIngredientRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

@@ -1,11 +1,15 @@
 package ru.nsu.fit.repiceBook.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Step {
 
@@ -15,7 +19,7 @@ public class Step {
 
     private String name;
     private Integer number;
-    private String imagePath;
+    private Long imageId;
     private String description;
     private Integer timerInSeconds;
 

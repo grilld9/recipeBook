@@ -17,8 +17,8 @@ import ru.nsu.fit.repiceBook.exceptions.InvalidJWT;
 import ru.nsu.fit.repiceBook.model.Role;
 import ru.nsu.fit.repiceBook.model.Token;
 import ru.nsu.fit.repiceBook.model.User;
-import ru.nsu.fit.repiceBook.repositories.TokenRepository;
-import ru.nsu.fit.repiceBook.repositories.UserRepository;
+import ru.nsu.fit.repiceBook.services.repositories.TokenRepository;
+import ru.nsu.fit.repiceBook.services.repositories.UserRepository;
 import ru.nsu.fit.repiceBook.services.verification.DataVerification;
 
 @Service

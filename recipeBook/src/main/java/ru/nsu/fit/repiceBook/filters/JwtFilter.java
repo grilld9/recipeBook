@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.nsu.fit.repiceBook.model.Token;
-import ru.nsu.fit.repiceBook.repositories.TokenRepository;
+import ru.nsu.fit.repiceBook.services.repositories.TokenRepository;
 import ru.nsu.fit.repiceBook.services.auth.JwtService;
 
 @Component

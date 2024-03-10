@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.repiceBook.model.Ingredient;
 import ru.nsu.fit.repiceBook.model.Recipe;
-import ru.nsu.fit.repiceBook.repositories.recipe.IngredientsRepository;
-import ru.nsu.fit.repiceBook.repositories.recipe.SourceIngredientRepository;
+import ru.nsu.fit.repiceBook.services.repositories.recipe.IngredientsRepository;
+import ru.nsu.fit.repiceBook.services.repositories.recipe.SourceIngredientRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;

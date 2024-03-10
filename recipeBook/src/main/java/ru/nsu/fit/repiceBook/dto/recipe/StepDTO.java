@@ -5,11 +5,11 @@ import lombok.Data;
 
 @Data
 @Builder
-public class StepCreatingRequest {
-
-    private Integer number;
-    private Long recipeId;
+public class StepDTO {
+    private Long id;
     private String name;
+    private Integer number;
+    private Long imageId;
     private String description;
-    private int timerInSeconds;
+    private Integer timerInSeconds;
 }

@@ -18,7 +18,4 @@ public class RecipeCreatingRequest {
     @NotNull
     @Size(min=1, message="Должен быть хотя бы 1 ингредиент")
     private List<Ingredient> ingredients;
-
-    @NotNull
-    private byte[] image;
 }

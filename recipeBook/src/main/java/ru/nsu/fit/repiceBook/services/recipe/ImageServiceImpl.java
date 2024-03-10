@@ -1,40 +1,41 @@
 package ru.nsu.fit.repiceBook.services.recipe;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import ru.nsu.fit.repiceBook.model.Image;
+import ru.nsu.fit.repiceBook.services.repositories.ImageRepository;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.*;
-import java.util.Random;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-    @Value("${images.dir}")
-    private String imagesDir;
+    private final ImageRepository imageRepository;
 
-    public Path saveImage(byte[] image) {
+    @Override
+    public Long saveImage(MultipartFile file) {
+        Image image = new Image();
         try {
-            if (!Files.exists(Paths.get(imagesDir))) {
-                Files.createDirectories(Paths.get(imagesDir));
-                log.info("Папка с изображениями создана: {}", imagesDir);
-            }
-            while(true) {
-                try {
-                    Path imagePath = Paths.get(imagesDir + "\\" + new Random().nextLong());
-                    Files.write(imagePath, image, StandardOpenOption.CREATE_NEW);
-                    log.info("Изображение загружено: {}", imagePath);
-                    return imagePath;
-                } catch (FileAlreadyExistsException e) {
-                    // Повторяем пока не будет сгенерировано уникальное имя файла
-                }
-            }
+            image.setImage(file.getBytes());
         } catch (IOException e) {
-            log.error("Ошибка при загрузке изображения");
+            log.error("Невозможно прочитать входящий файл: " + e.getMessage());
             throw new UncheckedIOException(e);
         }
+        image.setMediaType(file.getContentType());
+        return imageRepository.save(image).getId();
     }
+
+    @Override
+    public Image getImage(Long id) {
+        return imageRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Изображение не найдено"));
+    }
+
+
 }

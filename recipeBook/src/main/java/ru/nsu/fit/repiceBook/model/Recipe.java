@@ -21,7 +21,6 @@ public class Recipe {
 
     private String name;
     private String description;
-    private String imagePath;
 
     @OneToMany(orphanRemoval = true, mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<Ingredient> ingredients;
@@ -32,4 +31,7 @@ public class Recipe {
 
     @OneToMany(orphanRemoval = true, mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<Step> steps;
+
+    private Long imageId;
+
 }

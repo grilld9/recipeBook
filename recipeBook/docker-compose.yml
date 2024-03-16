@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  web:
+    container_name: recipe_book
+    image: recipe_book:latest
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/recipe_book
+      - SPRING_DATASOURCE_USERNAME=recipe_book
+      - SPRING_DATASOURCE_PASSWORD=ret34rfFCz
+      - APPLICATION_INGREDIENTS_PATH=ingredients
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: recipe_book
+      POSTGRES_PASSWORD: ret34rfFCz
+    ports:
+      - "5432:5432"

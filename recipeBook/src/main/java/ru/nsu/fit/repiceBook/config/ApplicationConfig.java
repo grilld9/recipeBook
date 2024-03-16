@@ -2,6 +2,7 @@ package ru.nsu.fit.repiceBook.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,9 @@ import java.io.IOException;
 @Configuration
 @Slf4j
 public class ApplicationConfig {
+
+  @Value("${application.ingredients.path}")
+  private String sourceIngredientsPath;
   @Bean
   public ModelMapper modelMapper() {
     return new ModelMapper();
@@ -23,7 +27,7 @@ public class ApplicationConfig {
   @Bean
   public CommandLineRunner ingredientsLoader(SourceIngredientRepository repo) {
     return args -> {
-      try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/ingredients.txt"))) {
+      try (BufferedReader reader = new BufferedReader(new FileReader(sourceIngredientsPath))) {
         String[] strings = reader.readLine().split(", ");
         for (String string : strings) {
             repo.save(SourceIngredient.builder().name(string).build());

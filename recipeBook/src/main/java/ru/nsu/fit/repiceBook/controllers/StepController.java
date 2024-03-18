@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.dto.recipe.StepCreatingRequest;
-import ru.nsu.fit.repiceBook.dto.recipe.StepCreatingResponse;
 import ru.nsu.fit.repiceBook.dto.recipe.StepsGetRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.StepDTO;
 import ru.nsu.fit.repiceBook.model.Image;
@@ -22,7 +21,7 @@ public class StepController {
     private final StepService stepService;
 
     @PostMapping("/step")
-    public ResponseEntity<StepCreatingResponse> addStep(@RequestBody StepCreatingRequest request) {
+    public ResponseEntity<StepDTO> addStep(@RequestBody StepCreatingRequest request) {
         return ResponseEntity.ok(stepService.addStep(request));
     }
 

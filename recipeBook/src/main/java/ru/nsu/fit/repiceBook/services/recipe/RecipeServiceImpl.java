@@ -3,20 +3,19 @@ package ru.nsu.fit.repiceBook.services.recipe;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.PermissionDeniedDataAccessException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
+import ru.nsu.fit.repiceBook.dto.UserDTO;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
-import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingResponse;
+import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
 import ru.nsu.fit.repiceBook.model.Image;
+import ru.nsu.fit.repiceBook.model.Ingredient;
 import ru.nsu.fit.repiceBook.model.Recipe;
 import ru.nsu.fit.repiceBook.model.User;
 import ru.nsu.fit.repiceBook.services.repositories.recipe.RecipeRepository;
 import ru.nsu.fit.repiceBook.services.UserService;
-
-import javax.naming.NoPermissionException;
 import java.util.*;
 
 @Service
@@ -29,30 +28,49 @@ public class RecipeServiceImpl implements RecipeService {
     private final UserService userService;
     private final RecipeRepository recipeRepository;
 
+    private final ModelMapper mapper;
+
     @Override
     @Transactional
-    public Recipe createRecipe(RecipeCreatingRequest request) {
+    public RecipeDTO createRecipe(RecipeCreatingRequest request) {
         User user = userService.getCurrUser();
         log.info("Добавление рецепта пользователю {}", user.getEmail());
-        Recipe recipe = Recipe.builder()
-            .name(request.getName())
-            .user(user)
-            .description(request.getDescription())
-            .build();
-        recipeRepository.save(recipe);
-        ingredientsService.saveIngredients(request.getIngredients(), recipe);
+        Recipe recipe = recipeRepository.save(Recipe.builder()
+                .name(request.getName())
+                .user(user)
+                .description(request.getDescription())
+                .build());
+        List<Ingredient> ingredients = ingredientsService.saveIngredients(request.getIngredients(), recipe);
         log.info("Рецепт name=\"{}\" пользователя {} добавлен", request.getName(), user.getEmail());
-        return recipe;
+        return RecipeDTO.builder()
+                .id(recipe.getId())
+                .ingredients(ingredients)
+                .imageId(recipe.getImageId())
+                .userDTO(mapper.map(user, UserDTO.class))
+                .description(recipe.getDescription())
+                .name(recipe.getName())
+                .build();
     }
     @Override
-    public Recipe getRecipe(Long recipeId) {
-        return recipeRepository.findById(recipeId).orElseThrow(
+    public RecipeDTO getRecipe(Long recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(
                 () -> new NoSuchElementException("Рецепта с id=" + recipeId + " не существует"));
+        return RecipeDTO.builder()
+                .id(recipe.getId())
+                .ingredients(recipe.getIngredients())
+                .imageId(recipe.getImageId())
+                .userDTO(mapper.map(recipe.getUser(), UserDTO.class))
+                .description(recipe.getDescription())
+                .name(recipe.getName())
+                .build();
     }
 
     @Override
-    public List<Recipe> getRecipesByUser() {
-        return userService.getCurrUser().getRecipes();
+    public List<RecipeDTO> getRecipesByUser() {
+        return userService.getCurrUser().getRecipes()
+                .stream()
+                .map(recipe -> mapper.map(recipe, RecipeDTO.class))
+                .toList();
     }
 
     @Override
@@ -63,7 +81,8 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     @Transactional
     public void setRecipeImage(Long recipeId, MultipartFile image) {
-        Recipe recipe = getRecipe(recipeId);
+        Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(
+                () -> new NoSuchElementException("Рецепта с id=" + recipeId + " не существует"));
         checkPermissionToRecipe(recipe);
         recipe.setImageId(imageService.saveImage(image));
         recipeRepository.save(recipe);

@@ -20,18 +20,23 @@ public class IngredientsServiceImpl implements IngredientsService {
     private final IngredientsRepository ingredientsRepository;
 
     @Override
-    public void saveIngredients(List<Ingredient> ingredients, Recipe recipe) throws NoSuchElementException {
+    public List<Ingredient> saveIngredients(List<Ingredient> ingredients, Recipe recipe) throws NoSuchElementException {
+        validateIngredients(ingredients);
+        ingredients.forEach(ingredient -> ingredient.setRecipe(recipe));
+        return ingredients.stream()
+                .map(ingredientsRepository::save)
+                .toList();
+    }
+
+    @Override
+    public List<Ingredient> validateIngredients(List<Ingredient> ingredients) throws NoSuchElementException {
         for (Ingredient ingredient : ingredients) {
             if (!sourceIngredientRepository.existsByName(ingredient.getName())) {
                 log.warn("Ингредиента {} не существует", ingredient.getName());
                 throw new NoSuchElementException();
             }
-            ingredientsRepository.save(Ingredient.builder()
-                    .name(ingredient.getName())
-                    .weight(ingredient.getWeight())
-                    .recipe(recipe)
-                    .build());
         }
         log.info("Ингредиенты прошли проверку");
+        return ingredients;
     }
 }

@@ -3,21 +3,19 @@ package ru.nsu.fit.repiceBook.services.recipe;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.dto.recipe.StepCreatingRequest;
-import ru.nsu.fit.repiceBook.dto.recipe.StepCreatingResponse;
 import ru.nsu.fit.repiceBook.dto.recipe.StepsGetRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.StepDTO;
 import ru.nsu.fit.repiceBook.model.Image;
-import ru.nsu.fit.repiceBook.model.Recipe;
 import ru.nsu.fit.repiceBook.model.Step;
+import ru.nsu.fit.repiceBook.services.repositories.recipe.RecipeRepository;
 import ru.nsu.fit.repiceBook.services.repositories.recipe.StepRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,47 +23,39 @@ import java.util.Objects;
 public class StepServiceImpl implements StepService {
 
     private final ImageService imageService;
-    private final RecipeService recipeService;
     private final StepRepository stepRepository;
+    private final RecipeRepository recipeRepository;
+    private final ModelMapper mapper;
 
-    public StepCreatingResponse addStep(StepCreatingRequest request) {
-        Step step = Step.builder()
-                .recipe(recipeService.getRecipe(request.getRecipeId()))
+    public StepDTO addStep(StepCreatingRequest request) {
+        Step step = stepRepository.save(Step.builder()
+                .recipe(recipeRepository.findById(request.getRecipeId()).orElseThrow(
+                        () -> new NoSuchElementException("Рецепта с id=" + request.getRecipeId() + " не существует")))
                 .name(request.getName())
                 .number(request.getNumber())
                 .description(request.getDescription())
                 .timerInSeconds(request.getTimerInSeconds())
-                .build();
-        stepRepository.save(step);
+                .build());
         log.info("Шаг рецепта {} сохранен", step.getRecipe().getName());
-        return StepCreatingResponse.builder()
-                .stepName(step.getName())
-                .recipeName(step.getRecipe().getName())
-                .stepNumber(step.getNumber())
-                .build();
+        return mapper.map(step, StepDTO.class);
+
     }
 
     @Override
     public List<StepDTO> getSteps(StepsGetRequest request) {
-        List<StepDTO> steps = new ArrayList<>();
-        for (Step step : recipeService.getRecipe(request.getRecipeId()).getSteps()) {
-            steps.add(StepDTO.builder()
-                    .id(step.getId())
-                    .name(step.getName())
-                    .imageId(step.getImageId())
-                    .description(step.getDescription())
-                    .number(step.getNumber())
-                    .timerInSeconds(step.getTimerInSeconds())
-                    .build());
-        }
-        return steps;
+        return recipeRepository.findById(request.getRecipeId()).orElseThrow(
+                () -> new NoSuchElementException("Рецепта с id=" + request.getRecipeId() + " не существует"))
+                .getSteps().stream()
+                .map(step -> mapper.map(step, StepDTO.class))
+                .toList();
     }
 
     @Override
     @Transactional
     public void setStepImage(Long recipeId, Integer stepNumber, MultipartFile image) {
         StepDTO stepDTO = getStep(recipeId, stepNumber);
-        Step step = stepRepository.findById(stepDTO.getId()).get();
+        Step step = stepRepository.findById(stepDTO.getId()).orElseThrow(
+                () -> new NoSuchElementException("Шага " + stepNumber + " не существует"));
         step.setImageId(imageService.saveImage(image));
         log.info("Изображение шага {} рецепта {} сохранено", stepNumber, recipeId);
         stepRepository.save(step);

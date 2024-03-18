@@ -12,7 +12,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
+
+  private Integer id;
+
   @Email(message = "Incorrect email")
   @NotBlank(message = "Email cannot be empty")
   private String email;
+
 }

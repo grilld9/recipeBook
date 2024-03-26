@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.nsu.fit.repiceBook.dto.UserDTO;
 import ru.nsu.fit.repiceBook.model.Ingredient;
+import ru.nsu.fit.repiceBook.model.enums.RecipeStatus;
 
 import java.util.List;
 
@@ -21,4 +22,5 @@ public class RecipeDTO {
     private List<Ingredient> ingredients;
     private UserDTO userDTO;
     private Long imageId;
+    private RecipeStatus status;
 }

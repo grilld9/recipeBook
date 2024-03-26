@@ -1,5 +1,6 @@
 package ru.nsu.fit.repiceBook.services.recipe;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -9,10 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.dto.UserDTO;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
+import ru.nsu.fit.repiceBook.mappers.RecipeMapper;
 import ru.nsu.fit.repiceBook.model.Image;
 import ru.nsu.fit.repiceBook.model.Ingredient;
 import ru.nsu.fit.repiceBook.model.Recipe;
 import ru.nsu.fit.repiceBook.model.User;
+import ru.nsu.fit.repiceBook.model.enums.RecipeStatus;
 import ru.nsu.fit.repiceBook.services.repositories.recipe.RecipeRepository;
 import ru.nsu.fit.repiceBook.services.UserService;
 import java.util.*;
@@ -40,40 +43,21 @@ public class RecipeServiceImpl implements RecipeService {
                 .build());
         List<Ingredient> ingredients = ingredientsService.saveIngredients(request.getIngredients(), recipe);
         log.info("Рецепт name=\"{}\" пользователя {} добавлен", request.getName(), user.getEmail());
-        return RecipeDTO.builder()
-                .id(recipe.getId())
-                .ingredients(ingredients)
-                .imageId(recipe.getImageId())
-                .userDTO(mapper.map(user, UserDTO.class))
-                .description(recipe.getDescription())
-                .name(recipe.getName())
-                .build();
+        return RecipeMapper.toDTO(recipe, ingredients);
     }
     @Override
     public RecipeDTO getRecipe(Long recipeId) {
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(
                 () -> new NoSuchElementException("Рецепта с id=" + recipeId + " не существует"));
-        return RecipeDTO.builder()
-                .id(recipe.getId())
-                .ingredients(recipe.getIngredients())
-                .imageId(recipe.getImageId())
-                .userDTO(mapper.map(recipe.getUser(), UserDTO.class))
-                .description(recipe.getDescription())
-                .name(recipe.getName())
-                .build();
+        return RecipeMapper.toDTO(recipe);
     }
 
     @Override
     public List<RecipeDTO> getRecipesByUser() {
         return userService.getCurrUser().getRecipes()
                 .stream()
-                .map(recipe -> mapper.map(recipe, RecipeDTO.class))
+                .map(RecipeMapper::toDTO)
                 .toList();
-    }
-
-    @Override
-    public List<Recipe> getRecipesByUser(Long userId) {
-        return userService.getUserById(userId).getRecipes();
     }
 
     @Override
@@ -97,5 +81,14 @@ public class RecipeServiceImpl implements RecipeService {
             log.warn("Пользователь {} не может редактировать рецепт с id={}", currUser.getEmail(), recipe.getId());
             throw new ResourceAccessException("Редактирование запрещено");
         }
+    }
+
+    @Override
+    @Transactional
+    public void completeRecipe(Long recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(
+                () -> new NoSuchElementException("Рецепта с id=" + recipeId + " не существует"));
+        recipe.setStatus(RecipeStatus.COMPLETED);
+        recipeRepository.save(recipe);
     }
 }

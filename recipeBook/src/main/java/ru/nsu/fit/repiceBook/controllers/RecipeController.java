@@ -33,7 +33,7 @@ public class RecipeController {
     }
 
 
-    @GetMapping("/all")
+    @GetMapping("/my")
     public ResponseEntity<List<RecipeDTO>> getRecipes() {
         return ResponseEntity.ok(recipeService.getRecipesByUser());
     }
@@ -51,5 +51,10 @@ public class RecipeController {
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(image.getMediaType()))
                 .body(image.getImage());
+    }
+
+    @PostMapping("/{id}/complete")
+    public ResponseEntity<String> completeRecipe(@PathVariable Long id) {
+        return ResponseEntity.ok("Рецепт завершен");
     }
 }

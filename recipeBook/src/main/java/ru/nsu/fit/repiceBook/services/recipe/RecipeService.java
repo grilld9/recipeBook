@@ -32,13 +32,6 @@ public interface RecipeService {
     List<RecipeDTO> getRecipesByUser();
 
     /**
-     * Получает список рецептов определенного пользователя
-     * @param userId ID пользователя
-     * @return список рецептов
-     */
-    List<Recipe> getRecipesByUser(Long userId);
-
-    /**
      * Изменить изображение рецепта
      * @param recipeId id рецепта
      * @param image изображение
@@ -57,4 +50,10 @@ public interface RecipeService {
      * @param recipe рецепт
      */
     void checkPermissionToRecipe(Recipe recipe);
+
+    /**
+     * Присвоить рецепту статус COMPLETED
+     * @param recipeId id рецепта
+     */
+    void completeRecipe(Long recipeId);
 }

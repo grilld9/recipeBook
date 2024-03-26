@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import ru.nsu.fit.repiceBook.model.enums.RecipeStatus;
 
 @Entity
 @Data
@@ -35,4 +37,8 @@ public class Recipe {
     @Column(name="image_id")
     private Long imageId;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private RecipeStatus status = RecipeStatus.IN_CREATING_PROCESS;
 }

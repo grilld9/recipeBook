@@ -19,6 +19,7 @@ public class Ingredient {
 
     private String name;
     private Float weight;
+    private CountUnit countUnit;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id")

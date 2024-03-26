@@ -1,9 +1,6 @@
 package ru.nsu.fit.repiceBook.services.recipe;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +24,7 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
 
     @Override
-    public Long saveImage(MultipartFile file) {
+    public Image saveImage(MultipartFile file) {
         Image image = new Image();
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -43,7 +40,7 @@ public class ImageServiceImpl implements ImageService {
         }
         image.setMediaType(MediaType.IMAGE_JPEG_VALUE);
         log.info("Изображение успешно сжато и сохранино");
-        return imageRepository.save(image).getId();
+        return imageRepository.save(image);
     }
 
     @Override
@@ -51,6 +48,4 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("Изображение не найдено"));
     }
-
-
 }

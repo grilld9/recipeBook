@@ -3,17 +3,15 @@ package ru.nsu.fit.repiceBook.services.recipe;
 import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.model.Image;
 
-import java.nio.file.Path;
-
 public interface ImageService {
 
 
     /**
      * Сохранить изображение
      * @param file файл изображения
-     * @return id изображения в бд
+     * @return сущность сохраненного изображения
      */
-    Long saveImage(MultipartFile file);
+    Image saveImage(MultipartFile file);
 
     /**
      * Получить изображение

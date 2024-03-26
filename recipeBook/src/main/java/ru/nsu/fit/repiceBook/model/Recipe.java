@@ -32,6 +32,7 @@ public class Recipe {
     @OneToMany(orphanRemoval = true, mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<Step> steps;
 
+    @Column(name="image_id")
     private Long imageId;
 
 }

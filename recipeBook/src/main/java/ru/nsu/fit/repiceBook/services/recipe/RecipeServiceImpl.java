@@ -1,6 +1,5 @@
 package ru.nsu.fit.repiceBook.services.recipe;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -31,7 +30,6 @@ public class RecipeServiceImpl implements RecipeService {
     private final ModelMapper mapper;
 
     @Override
-    @Transactional
     public RecipeDTO createRecipe(RecipeCreatingRequest request) {
         User user = userService.getCurrUser();
         log.info("Добавление рецепта пользователю {}", user.getEmail());
@@ -79,12 +77,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    @Transactional
     public void setRecipeImage(Long recipeId, MultipartFile image) {
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(
                 () -> new NoSuchElementException("Рецепта с id=" + recipeId + " не существует"));
         checkPermissionToRecipe(recipe);
-        recipe.setImageId(imageService.saveImage(image));
+        recipe.setImageId(imageService.saveImage(image).getId());
         recipeRepository.save(recipe);
     }
 

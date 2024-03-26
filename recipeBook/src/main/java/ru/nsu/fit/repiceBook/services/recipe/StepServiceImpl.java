@@ -1,13 +1,11 @@
 package ru.nsu.fit.repiceBook.services.recipe;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.dto.recipe.StepCreatingRequest;
-import ru.nsu.fit.repiceBook.dto.recipe.StepsGetRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.StepDTO;
 import ru.nsu.fit.repiceBook.model.Image;
 import ru.nsu.fit.repiceBook.model.Step;
@@ -41,38 +39,32 @@ public class StepServiceImpl implements StepService {
 
     }
 
-    @Override
-    public List<StepDTO> getSteps(StepsGetRequest request) {
-        return recipeRepository.findById(request.getRecipeId()).orElseThrow(
-                () -> new NoSuchElementException("Рецепта с id=" + request.getRecipeId() + " не существует"))
+    public List<StepDTO> getSteps(Long recipeId) {
+        return recipeRepository.findById(recipeId).orElseThrow(
+                () -> new NoSuchElementException("Рецепта с id=" + recipeId + " не существует"))
                 .getSteps().stream()
                 .map(step -> mapper.map(step, StepDTO.class))
                 .toList();
     }
 
-    @Override
-    @Transactional
     public void setStepImage(Long recipeId, Integer stepNumber, MultipartFile image) {
         StepDTO stepDTO = getStep(recipeId, stepNumber);
         Step step = stepRepository.findById(stepDTO.getId()).orElseThrow(
                 () -> new NoSuchElementException("Шага " + stepNumber + " не существует"));
-        step.setImageId(imageService.saveImage(image));
+        step.setImageId(imageService.saveImage(image).getId());
         log.info("Изображение шага {} рецепта {} сохранено", stepNumber, recipeId);
         stepRepository.save(step);
     }
 
-    @Override
     public Image getStepImage(Long recipeId, Integer stepNumber) {
         return imageService.getImage(getStep(recipeId, stepNumber).getImageId());
     }
 
-    @Override
     public StepDTO getStep(Long recipeId, Integer stepNumber) {
-        return getSteps(new StepsGetRequest(recipeId))
+        return getSteps(recipeId)
                 .stream()
                 .filter(x -> x.getNumber().equals(stepNumber))
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("Шага " + stepNumber + " не существует"));
     }
-
 }

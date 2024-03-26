@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
-import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingResponse;
+import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
 import ru.nsu.fit.repiceBook.model.Image;
 import ru.nsu.fit.repiceBook.model.Recipe;
 
@@ -16,27 +16,20 @@ public interface RecipeService {
      * @param request Запрос на создание рецепта
      * @return Ответ на создание рецепта
      */
-    Recipe createRecipe(RecipeCreatingRequest request);
+    RecipeDTO createRecipe(RecipeCreatingRequest request);
 
     /**
      * Получает рецепт по его ID
      * @param recipeId ID рецепта
      * @return рецепт
      */
-    Recipe getRecipe(Long recipeId);
+    RecipeDTO getRecipe(Long recipeId);
 
     /**
      * Получает список рецептов текущего пользователя
      * @return список рецептов
      */
-    List<Recipe> getRecipesByUser();
-
-    /**
-     * Получает список рецептов определенного пользователя
-     * @param userId ID пользователя
-     * @return список рецептов
-     */
-    List<Recipe> getRecipesByUser(Long userId);
+    List<RecipeDTO> getRecipesByUser();
 
     /**
      * Изменить изображение рецепта
@@ -57,4 +50,10 @@ public interface RecipeService {
      * @param recipe рецепт
      */
     void checkPermissionToRecipe(Recipe recipe);
+
+    /**
+     * Присвоить рецепту статус COMPLETED
+     * @param recipeId id рецепта
+     */
+    void completeRecipe(Long recipeId);
 }

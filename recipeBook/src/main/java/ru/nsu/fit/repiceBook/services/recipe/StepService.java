@@ -2,8 +2,6 @@ package ru.nsu.fit.repiceBook.services.recipe;
 
 import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.dto.recipe.StepCreatingRequest;
-import ru.nsu.fit.repiceBook.dto.recipe.StepCreatingResponse;
-import ru.nsu.fit.repiceBook.dto.recipe.StepsGetRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.StepDTO;
 import ru.nsu.fit.repiceBook.model.Image;
 
@@ -16,19 +14,14 @@ public interface StepService {
      * @param request данные запроса
      * @return данные о созданном шаге
      */
-    /**
-     * Создать шаг определенного рецепта
-     * @param request данные запроса
-     * @return данные о созданном шаге
-     */
-    StepCreatingResponse addStep(StepCreatingRequest request);
+    StepDTO addStep(StepCreatingRequest request);
 
     /**
      * Получить шаг рецепта
-     * @param request данные запроса
+     * @param recipeId id рецепта
      * @return данные шага
      */
-    List<StepDTO> getSteps(StepsGetRequest request);
+    List<StepDTO> getSteps(Long recipeId);
 
     /**
      * Задать изображение шага

@@ -1,8 +1,8 @@
 package ru.nsu.fit.repiceBook.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.http.MediaType;
 
 @Entity
 @Data
@@ -16,7 +16,9 @@ public class Image {
     private Long id;
 
     @Lob
+    @JsonIgnore
     private byte[] image;
 
+    @JsonIgnore
     private String mediaType;
 }

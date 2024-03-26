@@ -6,13 +6,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.nsu.fit.repiceBook.dto.recipe.RecipeGetResponse;
+import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
-import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingResponse;
 import ru.nsu.fit.repiceBook.model.Image;
-import ru.nsu.fit.repiceBook.model.Recipe;
 import ru.nsu.fit.repiceBook.services.recipe.RecipeService;
 import ru.nsu.fit.repiceBook.services.recipe.StepService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,29 +20,26 @@ import ru.nsu.fit.repiceBook.services.recipe.StepService;
 public class RecipeController {
 
     private final RecipeService recipeService;
-    private final StepService stepService;
-    private final ModelMapper mapper = new ModelMapper();
 
     @PostMapping
-    public ResponseEntity<?> postRecipe(
+    public ResponseEntity<RecipeDTO> postRecipe(
             @RequestBody RecipeCreatingRequest request) {
-        recipeService.createRecipe(request);
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(recipeService.createRecipe(request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Recipe> getRecipe(@PathVariable Long id) {
+    public ResponseEntity<RecipeDTO> getRecipe(@PathVariable Long id) {
         return ResponseEntity.ok(recipeService.getRecipe(id));
     }
 
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getRecipes() {
+    @GetMapping("/my")
+    public ResponseEntity<List<RecipeDTO>> getRecipes() {
         return ResponseEntity.ok(recipeService.getRecipesByUser());
     }
 
     @PostMapping("/{id}/image")
-    public ResponseEntity<?> setRecipeImage(@PathVariable Long id,
+    public ResponseEntity<String> setRecipeImage(@PathVariable Long id,
             @RequestBody MultipartFile image) {
         recipeService.setRecipeImage(id, image);
         return ResponseEntity.ok("Изображение изменено");
@@ -54,5 +51,10 @@ public class RecipeController {
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(image.getMediaType()))
                 .body(image.getImage());
+    }
+
+    @PostMapping("/{id}/complete")
+    public ResponseEntity<String> completeRecipe(@PathVariable Long id) {
+        return ResponseEntity.ok("Рецепт завершен");
     }
 }

@@ -1,5 +1,6 @@
 package ru.nsu.fit.repiceBook.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +24,6 @@ public class Ingredient {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id")
+    @JsonIgnore
     private Recipe recipe;
 }

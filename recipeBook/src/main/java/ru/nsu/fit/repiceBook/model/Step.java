@@ -19,11 +19,13 @@ public class Step {
 
     private String name;
     private Integer number;
-    private Long imageId;
     private String description;
     private Integer timerInSeconds;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
+
+    @Column(name="image_id")
+    private Long imageId;
 }

@@ -15,5 +15,7 @@ public interface IngredientsService {
      * @throws NoSuchElementException если входящих ингредиентов нету среди
      * предопределнных ингредиентов
      */
-    void saveIngredients(List<Ingredient> ingredients, Recipe recipe) throws NoSuchElementException;
+    List<Ingredient> saveIngredients(List<Ingredient> ingredients, Recipe recipe) throws NoSuchElementException;
+
+    List<Ingredient> validateIngredients(List<Ingredient> ingredients) throws NoSuchElementException;
 }

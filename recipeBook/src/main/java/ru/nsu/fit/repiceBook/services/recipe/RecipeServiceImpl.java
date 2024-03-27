@@ -41,7 +41,10 @@ public class RecipeServiceImpl implements RecipeService {
                 .user(user)
                 .description(request.getDescription())
                 .build());
-        List<Ingredient> ingredients = ingredientsService.saveIngredients(request.getIngredients(), recipe);
+        List<Ingredient> ingredients = ingredientsService.saveIngredients(request.getIngredients()
+                .stream()
+                .map(ingredient -> mapper.map(ingredient, Ingredient.class))
+                .toList(), recipe);
         log.info("Рецепт name=\"{}\" пользователя {} добавлен", request.getName(), user.getEmail());
         return RecipeMapper.toDTO(recipe, ingredients);
     }

@@ -17,5 +17,5 @@ public class RecipeCreatingRequest {
     private String description;
     @NotNull
     @Size(min=1, message="Должен быть хотя бы 1 ингредиент")
-    private List<Ingredient> ingredients;
+    private List<IngredientDTO> ingredients;
 }

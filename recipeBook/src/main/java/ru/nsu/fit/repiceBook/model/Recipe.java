@@ -22,6 +22,7 @@ public class Recipe {
     private Long id;
 
     private String name;
+    @Column(length = 10000)
     private String description;
 
     @OneToMany(orphanRemoval = true, mappedBy = "recipe", cascade = CascadeType.ALL)

@@ -1,4 +1,4 @@
-package ru.nsu.fit.repiceBook.model;
+package ru.nsu.fit.repiceBook.model.enums;
 
 public enum CountUnit {
     KILOGRAM,

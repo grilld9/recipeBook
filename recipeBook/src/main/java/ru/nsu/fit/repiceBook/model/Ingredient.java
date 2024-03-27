@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.nsu.fit.repiceBook.model.enums.CountUnit;
 
 @Entity
 @Builder
@@ -20,6 +21,8 @@ public class Ingredient {
 
     private String name;
     private Float weight;
+
+    @Enumerated(EnumType.STRING)
     private CountUnit countUnit;
 
     @ManyToOne(fetch = FetchType.LAZY)

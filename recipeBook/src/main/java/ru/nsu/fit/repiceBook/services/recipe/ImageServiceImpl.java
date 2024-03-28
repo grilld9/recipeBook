@@ -1,5 +1,6 @@
 package ru.nsu.fit.repiceBook.services.recipe;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,23 @@ public class ImageServiceImpl implements ImageService {
         Image image = new Image();
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BufferedImage buffImage = ImageIO.read(file.getInputStream());
+            int width = buffImage.getWidth();
+            int height = buffImage.getHeight();
+            if (Math.max(width, height) > 600) {
+                if (height > width) {
+                    width = width * (1 - (height - 600) / height);
+                    height = 600;
+                } else {
+                    height = width * (1 - (width - 600) / width);
+                    width = 600;
+                }
+            }
             Thumbnails.of(ImageIO.read(file.getInputStream()))
                 .scalingMode(ScalingMode.BILINEAR)
-                .scale(0.5)
                 .outputFormat("jpg")
+                .height(height)
+                .width(width)
                 .toOutputStream(outputStream);
             image.setImage(outputStream.toByteArray());
         } catch (IOException e) {

@@ -13,6 +13,5 @@ import java.util.Optional;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
-    @Query("select r from Recipe r where lower(r.name) like lower(?1)")
-    List<Recipe> searchByName(String name);
+    List<Recipe> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
 }

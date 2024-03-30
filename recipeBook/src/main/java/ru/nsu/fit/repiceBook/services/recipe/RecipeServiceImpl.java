@@ -102,7 +102,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeDTO> searchRecipes(String name, Integer page, Integer pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        return recipeRepository.searchByName(name)
+        return recipeRepository.findAllByNameContainingIgnoreCase(name, pageable)
                 .stream()
                 .map(RecipeMapper::toDTO)
                 .toList();

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.repiceBook.exceptions.LoginException;
 import ru.nsu.fit.repiceBook.model.User;
-import ru.nsu.fit.repiceBook.services.repositories.UserRepository;
+import ru.nsu.fit.repiceBook.repositories.UserRepository;
 
 @Component
 @RequiredArgsConstructor

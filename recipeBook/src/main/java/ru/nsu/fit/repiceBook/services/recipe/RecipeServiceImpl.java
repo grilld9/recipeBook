@@ -4,10 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
-import ru.nsu.fit.repiceBook.dto.UserDTO;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
 import ru.nsu.fit.repiceBook.mappers.RecipeMapper;
@@ -16,8 +18,10 @@ import ru.nsu.fit.repiceBook.model.Ingredient;
 import ru.nsu.fit.repiceBook.model.Recipe;
 import ru.nsu.fit.repiceBook.model.User;
 import ru.nsu.fit.repiceBook.model.enums.RecipeStatus;
-import ru.nsu.fit.repiceBook.services.repositories.recipe.RecipeRepository;
+
+import ru.nsu.fit.repiceBook.repositories.recipe.RecipeRepository;
 import ru.nsu.fit.repiceBook.services.UserService;
+
 import java.util.*;
 
 @Service
@@ -93,5 +97,14 @@ public class RecipeServiceImpl implements RecipeService {
                 () -> new NoSuchElementException("Рецепта с id=" + recipeId + " не существует"));
         recipe.setStatus(RecipeStatus.COMPLETED);
         recipeRepository.save(recipe);
+    }
+
+    @Override
+    public List<RecipeDTO> searchRecipes(String name, Integer page, Integer pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return recipeRepository.searchByName(name)
+                .stream()
+                .map(RecipeMapper::toDTO)
+                .toList();
     }
 }

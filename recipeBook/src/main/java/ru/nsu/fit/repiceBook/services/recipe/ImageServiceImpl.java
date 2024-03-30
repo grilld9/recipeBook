@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.model.Image;
-import ru.nsu.fit.repiceBook.services.repositories.ImageRepository;
+import ru.nsu.fit.repiceBook.repositories.ImageRepository;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

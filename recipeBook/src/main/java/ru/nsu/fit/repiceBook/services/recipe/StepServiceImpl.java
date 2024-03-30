@@ -9,8 +9,8 @@ import ru.nsu.fit.repiceBook.dto.recipe.StepCreatingRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.StepDTO;
 import ru.nsu.fit.repiceBook.model.Image;
 import ru.nsu.fit.repiceBook.model.Step;
-import ru.nsu.fit.repiceBook.services.repositories.recipe.RecipeRepository;
-import ru.nsu.fit.repiceBook.services.repositories.recipe.StepRepository;
+import ru.nsu.fit.repiceBook.repositories.recipe.RecipeRepository;
+import ru.nsu.fit.repiceBook.repositories.recipe.StepRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;

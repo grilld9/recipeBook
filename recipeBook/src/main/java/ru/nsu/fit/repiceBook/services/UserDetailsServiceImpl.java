@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.nsu.fit.repiceBook.services.repositories.UserRepository;
+import ru.nsu.fit.repiceBook.repositories.UserRepository;
 
 @Service
 @RequiredArgsConstructor

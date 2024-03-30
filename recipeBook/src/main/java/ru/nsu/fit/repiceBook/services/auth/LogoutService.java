@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.repiceBook.model.Token;
-import ru.nsu.fit.repiceBook.services.repositories.TokenRepository;
+import ru.nsu.fit.repiceBook.repositories.TokenRepository;
 
 @Service
 @RequiredArgsConstructor

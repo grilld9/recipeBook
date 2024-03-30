@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.repiceBook.model.User;
-import ru.nsu.fit.repiceBook.services.repositories.UserRepository;
+import ru.nsu.fit.repiceBook.repositories.UserRepository;
 import java.util.NoSuchElementException;
 
 @Service

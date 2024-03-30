@@ -56,4 +56,13 @@ public interface RecipeService {
      * @param recipeId id рецепта
      */
     void completeRecipe(Long recipeId);
+
+    /**
+     * Искать рецепты по названию
+     * @param name название/часть названия рецепт
+     * @param page номер страницы
+     * @param pageSize развер страницы
+     * @return
+     */
+    List<RecipeDTO> searchRecipes(String name, Integer page, Integer pageSize);
 }

@@ -92,7 +92,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public void completeRecipe(Long recipeId) {
+    public void complete(Long recipeId) {
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(
                 () -> new NoSuchElementException("Рецепта с id=" + recipeId + " не существует"));
         recipe.setStatus(RecipeStatus.COMPLETED);
@@ -113,4 +113,6 @@ public class RecipeServiceImpl implements RecipeService {
                 .map(RecipeMapper::toDTO)
                 .toList();
     }
+
+
 }

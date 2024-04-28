@@ -56,7 +56,7 @@ public interface RecipeService {
      * Присвоить рецепту статус COMPLETED
      * @param recipeId id рецепта
      */
-    void completeRecipe(Long recipeId);
+    void complete(Long recipeId);
 
     /**
      * Искать рецепты по названию

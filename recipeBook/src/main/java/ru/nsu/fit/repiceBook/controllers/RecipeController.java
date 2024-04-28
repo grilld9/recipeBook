@@ -55,6 +55,7 @@ public class RecipeController {
 
     @PostMapping("/{id}/complete")
     public ResponseEntity<String> completeRecipe(@PathVariable Long id) {
+        recipeService.complete(id);
         return ResponseEntity.ok("Рецепт завершен");
     }
 }

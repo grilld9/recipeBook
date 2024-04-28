@@ -17,7 +17,8 @@ public class RecipeSearchController {
     private final RecipeService recipeService;
 
     @GetMapping
-    public ResponseEntity<List<RecipeDTO>> searchRecipes(@RequestParam String name, @RequestParam Integer page, @RequestParam Integer pageSize) {
-        return ResponseEntity.ok(recipeService.searchRecipes(name, page, pageSize));
+    public ResponseEntity<List<RecipeDTO>> searchRecipes(@RequestParam String name, @RequestParam(required = false) List<String> tags,
+         @RequestParam Integer page, @RequestParam Integer pageSize) {
+        return ResponseEntity.ok(recipeService.searchRecipes(name, tags, page, pageSize));
     }
 }

@@ -7,6 +7,7 @@ import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
 import ru.nsu.fit.repiceBook.model.Image;
 import ru.nsu.fit.repiceBook.model.Recipe;
+import ru.nsu.fit.repiceBook.model.Tag;
 
 public interface RecipeService {
 
@@ -64,5 +65,5 @@ public interface RecipeService {
      * @param pageSize развер страницы
      * @return
      */
-    List<RecipeDTO> searchRecipes(String name, Integer page, Integer pageSize);
+    List<RecipeDTO> searchRecipes(String name, List<String> tags, Integer page, Integer pageSize);
 }

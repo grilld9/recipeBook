@@ -3,6 +3,8 @@ package ru.nsu.fit.repiceBook.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,4 +44,10 @@ public class Recipe {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private RecipeStatus status = RecipeStatus.IN_CREATING_PROCESS;
+
+    @ManyToMany
+    @JoinTable(name = "recipe_tag",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags;
 }

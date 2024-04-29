@@ -32,6 +32,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final IngredientsService ingredientsService;
     private final ImageService imageService;
     private final UserService userService;
+    private final TagService tagService;
     private final RecipeRepository recipeRepository;
     private final TagRepository tagRepository;
     private final ModelMapper mapper;
@@ -44,6 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
                 .name(request.getName())
                 .user(user)
                 .description(request.getDescription())
+                .tags(new HashSet<>(tagService.get(request.getTags())))
                 .build());
         List<Ingredient> ingredients = ingredientsService.saveIngredients(request.getIngredients()
                 .stream()

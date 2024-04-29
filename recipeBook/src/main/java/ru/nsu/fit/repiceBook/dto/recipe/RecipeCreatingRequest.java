@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import ru.nsu.fit.repiceBook.model.Ingredient;
+import ru.nsu.fit.repiceBook.model.Tag;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public class RecipeCreatingRequest {
     @NotNull
     @Size(min=1, message="Должен быть хотя бы 1 ингредиент")
     private List<IngredientDTO> ingredients;
+
+    private List<TagDTO> tags;
 }

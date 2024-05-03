@@ -1,13 +1,13 @@
 package ru.nsu.fit.repiceBook.services.recipe;
 
-import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
+import ru.nsu.fit.repiceBook.dto.recipe.RecipeUpdateRequest;
 import ru.nsu.fit.repiceBook.model.Image;
 import ru.nsu.fit.repiceBook.model.Recipe;
-import ru.nsu.fit.repiceBook.model.Tag;
+
+import java.util.List;
 
 public interface RecipeService {
 
@@ -66,4 +66,12 @@ public interface RecipeService {
      * @return
      */
     List<RecipeDTO> searchRecipes(String name, List<String> tags, Integer page, Integer pageSize);
+
+    /**
+     * Обновить рецепт
+     * @param id идентификатор
+     * @param request
+     * @return рецепт
+     */
+    RecipeDTO update(Long id, RecipeUpdateRequest request);
 }

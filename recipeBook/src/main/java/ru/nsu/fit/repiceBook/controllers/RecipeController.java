@@ -1,16 +1,15 @@
 package ru.nsu.fit.repiceBook.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
+import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
+import ru.nsu.fit.repiceBook.dto.recipe.RecipeUpdateRequest;
 import ru.nsu.fit.repiceBook.model.Image;
 import ru.nsu.fit.repiceBook.services.recipe.RecipeService;
-import ru.nsu.fit.repiceBook.services.recipe.StepService;
 
 import java.util.List;
 
@@ -57,5 +56,10 @@ public class RecipeController {
     public ResponseEntity<String> completeRecipe(@PathVariable Long id) {
         recipeService.complete(id);
         return ResponseEntity.ok("Рецепт завершен");
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<RecipeDTO> update(@PathVariable("id") Long id, @RequestBody RecipeUpdateRequest request) {
+        return ResponseEntity.ok(recipeService.update(id, request));
     }
 }

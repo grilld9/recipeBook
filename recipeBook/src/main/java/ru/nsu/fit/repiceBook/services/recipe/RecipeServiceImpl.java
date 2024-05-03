@@ -4,25 +4,29 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeCreatingRequest;
 import ru.nsu.fit.repiceBook.dto.recipe.RecipeDTO;
+import ru.nsu.fit.repiceBook.dto.recipe.RecipeUpdateRequest;
+import ru.nsu.fit.repiceBook.dto.recipe.TagDTO;
 import ru.nsu.fit.repiceBook.mappers.RecipeMapper;
-import ru.nsu.fit.repiceBook.model.*;
+import ru.nsu.fit.repiceBook.model.Image;
+import ru.nsu.fit.repiceBook.model.Ingredient;
+import ru.nsu.fit.repiceBook.model.Recipe;
+import ru.nsu.fit.repiceBook.model.User;
 import ru.nsu.fit.repiceBook.model.enums.RecipeStatus;
-
 import ru.nsu.fit.repiceBook.repositories.recipe.RecipeRepository;
 import ru.nsu.fit.repiceBook.repositories.recipe.TagRepository;
 import ru.nsu.fit.repiceBook.services.UserService;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -116,5 +120,23 @@ public class RecipeServiceImpl implements RecipeService {
                 .toList();
     }
 
-
+    @Override
+    @Transactional
+    public RecipeDTO update(Long id, RecipeUpdateRequest request) {
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Рецепта с id=" + id + " не существует"));
+        if (request.getName() != null) {
+            recipe.setName(request.getName());
+        }
+        if (request.getDescription() != null) {
+            recipe.setDescription(request.getDescription());
+        }
+        if (request.getTags() != null) {
+            recipe.setTags(new HashSet<>(tagService.get(request.getTags()
+                    .stream()
+                    .map(TagDTO::new)
+                    .toList())));
+        }
+        return RecipeMapper.toDTO(recipeRepository.save(recipe));
+    }
 }
